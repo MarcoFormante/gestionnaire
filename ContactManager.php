@@ -14,7 +14,8 @@ class ContactManager
     }
  
     //Find all contacts and return Contact Objects 
-    public function findAll():array{
+    public function findAll(): array {
+
         $query = "SELECT * FROM contact";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
@@ -22,7 +23,7 @@ class ContactManager
         $contacts = [];
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             $contact = new Contact();
-
+            
             $contact->setId($row['id']);
             $contact->setName($row['name']);
             $contact->setEmail($row['email']);
@@ -34,7 +35,3 @@ class ContactManager
         return $contacts;
     }
 }
-
-$c = new ContactManager();
-
-var_dump($c->findAll());
