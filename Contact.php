@@ -49,6 +49,6 @@ class Contact
 
     public function __toString()
     {
-        return " ID: {$this->id}\n NAME: {$this->name}\n EMAIL: {$this->email}\n PHONE_NUMBER: {$this->phone_number}";
+        return " ID: {$this->id}\n NAME: {$this->name}\n EMAIL: {$this->email}\n PHONE_NUMBER: {$this->phone_number}\n---------------------------\n";
     }
 }
