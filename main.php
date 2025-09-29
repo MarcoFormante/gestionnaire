@@ -8,5 +8,5 @@ $command = new Command($manager);
 
 while (true) {
     $command->start();
-    $command->handleCommand(($command->line));
+    $command->handleCommand();
 }
