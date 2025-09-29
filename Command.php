@@ -46,8 +46,7 @@ class Command {
 
         // If the Command not exists, display help text
         }else{
-             echo "This Command not exist!\n";
-             $this->help();
+            echo "This Command not exist!\n";
         }
     }
 
@@ -57,16 +56,26 @@ class Command {
     // Fetch all Contacts and display them
     private function list(){
         $contacts = $this->contactManager->findAll();
-        foreach ($contacts as $contact) {
-            echo $contact;
+        if ($contacts) {
+            foreach ($contacts as $contact) {
+                echo $contact;
+            }
+        }else{
+            echo "There are no Contacts in the database" . PHP_EOL;
         }
+       
     }
 
 
-    // Fetch one Contact and display it
+    // Fetch one Contact and display it else display error
     public function detail(array $matches){
         $id = str_replace("detail ","",$matches)[0];
-        $this->contactManager->findById($id);
+        $contact = $this->contactManager->findById($id);
+        if($contact){
+            echo $contact;
+        }else{
+            echo "This Contact not Exists" . PHP_EOL;
+        }
     }
 
 
@@ -77,7 +86,8 @@ class Command {
         $hasAllFields = count($fields) === 3; 
 
         if (!$hasAllFields) {
-          echo "All fields are required";
+            echo "All fields are required" . PHP_EOL;
+            return;
         }
 
         foreach ($fields as $field) {
@@ -93,7 +103,7 @@ class Command {
                 return;
                 
             }elseif (!preg_match("/^[0-9]{10}$/",$fields[2])) {
-                  echo "Phone number must contain only numbers and must contain 10 numbers." . PHP_EOL;
+                  echo "Phone number must contain only 10 numbers." . PHP_EOL;
                 return;
             }
         }
@@ -109,7 +119,7 @@ class Command {
         if($this->contactManager->create($contact)){
             echo "New Contact Created :" . PHP_EOL .   $contact;
         }else{
-            echo "Error during creation action";
+            echo "Error during creation action" . PHP_EOL ;
         }
         
     }
@@ -137,6 +147,9 @@ class Command {
             delete [id] : supprime un contact
 
             quit : quitte le programme
+
+            Attention à la syntaxe des commandes, les espaces et virgules sont importants.
+
         ";
         echo $helpText;
     }

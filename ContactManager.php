@@ -54,7 +54,7 @@ class ContactManager
             $contact->setEmail($row['email']);
             $contact->setPhoneNumber($row['phone_number']);
 
-            echo $contact;
+            return $contact;
         }
     } 
 
