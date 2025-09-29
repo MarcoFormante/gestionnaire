@@ -12,7 +12,7 @@ class Command {
 
     
     public function start(){
-        $this->line = readline("Entrez votre commande (create, delete|id, detail|id, list) : ");
+        $this->line = readline("Entrez votre commande (create, delete \$id, detail \$id, list, help) : ");
     }
 
 
@@ -34,9 +34,20 @@ class Command {
             $this->create();
 
 
-        // Handle delete Action 
+        // Handle delete Command 
         }elseif(preg_match("/^delete [0-9]+$/i", $this->line, $matches)){
             $this->delete($matches);
+
+
+        // Handle help Command
+        }elseif($this->line === "help"){
+                $this->help();
+
+
+        // If the Command not exists, display help text
+        }else{
+             echo "This Command not exist!\n";
+             $this->help();
         }
     }
 
@@ -116,7 +127,18 @@ class Command {
 
 
     private function help(){
-        
+        $helpText = "
+            help : affiche cette aide
+
+            list : liste les contacts
+
+            create [name], [email], [phone number] : crée un contact
+
+            delete [id] : supprime un contact
+
+            quit : quitte le programme
+        ";
+        echo $helpText;
     }
 
 
