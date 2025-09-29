@@ -17,19 +17,19 @@ class Command {
 
 
 
-    public function handleCommand(){
-        // Handle List Command - Show all Contacts
+    public function handleCommand(bool &$loop){
+        // Handle List Command - ## Show all Contacts ## 
         if ($this->line === 'list') {
             $this->list();
 
             
-        // Handle detail Command - Display details of one Contact by its ID
+        // Handle detail Command - ## Display details of one Contact by its ID  ##
         }elseif(preg_match("/^detail [0-9]+$/i", $this->line, $matches)){
             $this->detail($matches);
            
 
 
-        // Handle detail Command - Display details of one Contact by its ID
+        // Handle detail Command - ## Display details of one Contact by its ID ##
         }elseif($this->line === "create"){
             $this->create();
 
@@ -44,7 +44,12 @@ class Command {
                 $this->help();
 
 
-        // If the Command not exists, display help text
+         // Handle quit Command - ## Stop Loop ## 
+        }elseif($this->line === "quit"){
+            $this->quit($loop);
+
+
+         // If the Command not exists, display help text
         }else{
             echo "This Command not exist!\n";
         }
@@ -125,7 +130,7 @@ class Command {
     }
 
 
-     //Check all Inputs and create a new Contact
+     //Delete Contact
     private function delete(array $matches){
         $id = str_replace("delete ","",$matches)[0];
         if($this->contactManager->delete($id)){
@@ -136,6 +141,7 @@ class Command {
     } 
 
 
+    // Show Help Text
     private function help(){
         $helpText = "
             help : affiche cette aide
@@ -152,6 +158,12 @@ class Command {
 
         ";
         echo $helpText;
+    }
+
+
+
+    private function quit(bool &$loop){
+        $loop = false;
     }
 
 

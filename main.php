@@ -6,7 +6,9 @@ require_once 'Command.php';
 $manager = new ContactManager();
 $command = new Command($manager);
 
-while (true) {
+$loop = true;
+
+while ($loop) {
     $command->start();
-    $command->handleCommand();
+    $command->handleCommand($loop);
 }
