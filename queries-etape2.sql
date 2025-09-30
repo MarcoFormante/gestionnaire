@@ -15,3 +15,5 @@
     ('Giulia Bianchi', 'giulia.bianchi@example.com', '3897654321'),
     ('Luca Verdi', 'luca.verdi@example.com', '3339876543');
 
+
+    ALTER TABLE contact MODIFY name varchar(30) NOT NULL
