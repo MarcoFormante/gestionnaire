@@ -24,7 +24,7 @@ class Command {
 
             
         // Handle detail Command - ## Display details of one Contact by its ID  ##
-        }elseif(preg_match("/^detail [0-9]+$/i", $this->line, $matches)){
+        }elseif(preg_match("/^detail\s+[0-9]+$/i", $this->line, $matches)){
             $this->detail($matches);
            
 
