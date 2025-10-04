@@ -2,7 +2,7 @@
 
 class Contact
 {
-    private int $id;
+    private int $id = 0;
     private string $name;
     private string $email;
     private string $phone_number;

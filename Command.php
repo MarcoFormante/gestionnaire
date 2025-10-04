@@ -12,7 +12,7 @@ class Command {
 
     
     public function start(){
-        $this->line = readline("Entrez votre commande (create, delete \$id, detail \$id, list, help) : ");
+        $this->line = trim(strtolower(readline("Entrez votre commande (create, delete \$id, detail \$id, modify \$id list, help) : ")));
     }
 
 
@@ -29,9 +29,14 @@ class Command {
            
 
 
+        // Handle modify Command  # Modify contact properties
+        }elseif(preg_match("/modify\s+(\d+)/i", $this->line, $matches)){
+            $this->modify($matches);
+
+
         // Handle detail Command - ## Display details of one Contact by its ID ##
         }elseif($this->line === "create"){
-            $this->create();
+            $this->createOrModify();
 
 
         // Handle delete Command 
@@ -51,7 +56,7 @@ class Command {
 
          // If the Command not exists, display help text
         }else{
-            echo "This Command not exist!\n";
+           echo "This command does not exist!" . PHP_EOL;
         }
     }
 
@@ -74,19 +79,19 @@ class Command {
 
     // Fetch one Contact and display it else display error
     public function detail(array $matches){
-        $id = str_replace("detail ","",$matches)[0];
+        $id = preg_replace('/detail\s+/i' ,"",$matches[0]);
         $contact = $this->contactManager->findById($id);
         if($contact){
             echo $contact;
         }else{
-            echo "This Contact not Exists" . PHP_EOL;
+            echo "This contact does not exist." . PHP_EOL;
         }
     }
 
 
     //Check all Inputs and create a new Contact
-    private function create(){
-        $createLine = readline("Enter name, email, phone number: " );
+    private function createOrModify(int $id = null){
+        $createLine = trim(readline( ($id ? "Modify Contact -> " : "New Contact -> ") . "Enter name, email, phone number: " ));
         $fields = explode(",",$createLine);
         $hasAllFields = count($fields) === 3; 
 
@@ -121,10 +126,15 @@ class Command {
         $contact->setEmail($email);
         $contact->setPhoneNumber($phone_number);
 
-        if($this->contactManager->create($contact)){
-            echo "New Contact Created :" . PHP_EOL .   $contact;
+        if ($id) {
+            $contact->setId($id);
+        }
+
+        if($this->contactManager->createOrModify($contact)){
+            
+            echo ($contact->getId() ? "Contact Updated" : "New Contact Created :") . PHP_EOL .   $contact;
         }else{
-            echo "Error during creation action" . PHP_EOL ;
+            echo "Error during " . $contact->getId() ? "modification": "creation" . " action" . PHP_EOL ;
         }
         
     }
@@ -132,11 +142,11 @@ class Command {
 
      //Delete Contact
     private function delete(array $matches){
-        $id = str_replace("delete ","",$matches)[0];
+        $id = preg_replace('/delete\s+/i',"",$matches[0]);
         if($this->contactManager->delete($id)){
             echo "Contact Deleted" . PHP_EOL;
         }else{
-               echo "The ID is not Valid" . PHP_EOL;
+            echo "The ID is not Valid" . PHP_EOL;
         }
     } 
 
@@ -154,8 +164,9 @@ class Command {
 
             quit : quitte le programme
 
-            Attention à la syntaxe des commandes, les espaces et virgules sont importants.
+            modify [id] : modifier un contact
 
+            Attention à la syntaxe des commandes, les espaces et virgules sont importants.
         ";
         echo $helpText;
     }
@@ -167,6 +178,72 @@ class Command {
     }
 
 
+
+    // Handle Modify Command - ## Single param  or all params ## 
+    private function modify(array $matches){
+        $id = preg_replace('/modify\s+/i',"",$matches[0]);
+        
+        $contact = $this->contactManager->findById($id);
+
+        if(!$contact){
+            echo "The ID is not valid" . PHP_EOL;
+            return;
+        }
+
+        $line = trim(strtolower(readline("Quelle propriété voulez-vous modifier ? (name, email, telephone, all): ")));
+        
+        
+        switch($line){
+            case "name":
+                $name = trim(readline("Entrez un nouveau Nom: "));
+                if (!preg_match('/([a-zA-Z]|[à-ü]|[À-Ü])/',$name) || strlen($name) > 30 ){
+                    echo "Invalid name. Please enter a valid name and make sure it does not exceed 30 characters." . PHP_EOL;
+                    return;
+                }else{
+                    $contact->setName($name);
+                }
+            break;
+
+
+            case "email":
+                $email = trim(readline("Entrez un nouveau mail: "));
+                if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+                    echo "Add a valid Email, Please." . PHP_EOL;
+                    return; 
+                }
+                $contact->setEmail($email);
+                
+            break;
+
+
+            case "telephone":
+                $phone_number = trim(readline("Entrez un nouveau numero de téléphone: "));
+                if (!preg_match("/^[0-9]{10}$/",$phone_number)) {
+                    echo "Phone number must contain only 10 numbers." . PHP_EOL;
+                    return; 
+                }
+                $contact->setPhoneNumber($phone_number);
+                
+            break;
+
+            // Handle all params
+            case "all":
+                $this->createOrModify($contact->getId());
+                return;
+            break;
+
+            default:
+                echo "Invalid option. Please choose name, email, telephone, or all." . PHP_EOL;
+                return;
+        }
+        
+        // Handle single param
+        if($this->contactManager->update($contact)){
+            echo "Contact Updated : ". PHP_EOL . $contact ;
+        }else{
+           echo "Error during modification, please try again." . PHP_EOL;
+        }
+    } 
 
    
 }
