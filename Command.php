@@ -80,8 +80,9 @@ class Command {
 
 
     //Check all Inputs and create a new Contact
-    private function createOrModify(int $id = null){
-        $createLine = trim(readline(($id ? "Modifier le contact -> " : "Nouveau contact -> ") . "Entrez le nom, l'email et le numéro de téléphone : "));
+    private function createOrModify(int|null $id = null){
+        $isNew = is_null($id);
+        $createLine = trim(readline(($isNew ? "Nouveau contact -> " : "Modifier le contact -> ") . "Entrez le nom, l'email et le numéro de téléphone : "));
         $fields = explode(",",$createLine);
         $hasAllFields = count($fields) === 3; 
 
@@ -110,12 +111,12 @@ class Command {
         $contact->setEmail($email);
         $contact->setPhoneNumber($phone_number);
 
-        if ($id) {
+        if (!$isNew) {
             $contact->setId($id);
         }
 
         if ($this->contactManager->createOrModify($contact)) {
-            echo ($contact->getId() ? "Contact mis à jour" : "Nouveau contact créé :") . PHP_EOL . $contact;
+            echo ($isNew  ? "Nouveau contact créé :" : "Contact mis à jour") . PHP_EOL . $contact;
         } else {
             showError("Erreur lors de " . ($contact->getId() ? "la modification" : "la création"). PHP_EOL);
         }
