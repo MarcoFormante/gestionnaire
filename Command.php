@@ -2,7 +2,7 @@
 require 'functions.php';
 
 class Command {
-    public string $line; 
+    private string $line; 
     private ContactManager $contactManager;
 
 
@@ -13,7 +13,7 @@ class Command {
 
     
     public function start(){
-        $this->line = trim(strtolower(readline("Entrez votre commande (create, delete \$id, detail \$id, modify \$id list, help) : ")));
+        $this->line = trim(strtolower(readline("Entrez votre commande (create, delete \$id, detail \$id, modify \$id, list, quit, help) : ")));
     }
 
 
