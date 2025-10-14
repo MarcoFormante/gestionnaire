@@ -24,7 +24,7 @@ class Command {
             $this->list();
             
         // Handle detail Command - ## Display details of one Contact by its ID  ##
-        }elseif(preg_match("/^detail\s+[0-9]+$/i", $this->line, $matches)){
+        }elseif(preg_match("/detail\s+(\d+)/i", $this->line, $matches)){
             $this->detail($matches);
            
         // Handle modify Command  # Modify contact properties
@@ -35,7 +35,7 @@ class Command {
             $this->createOrModify();
 
         // Handle delete Command 
-        }elseif(preg_match("/^delete [0-9]+$/i", $this->line, $matches)){
+        }elseif(preg_match("/delete\s+(\d+)/i", $this->line, $matches)){
             $this->delete($matches);
 
         // Handle help Command
