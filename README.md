@@ -64,6 +64,6 @@ Enter your command (help, list, detail, create, delete, quit): help
 1. Download the project folder from the repository.
 2. Open a terminal at the root of the project.
 3. Run the following command:
-```bash
-php main.php
+  ```bash
+  php main.php
 4. Follow the instructions displayed in the console.
