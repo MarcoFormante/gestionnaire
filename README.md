@@ -66,4 +66,5 @@ Enter your command (help, list, detail, create, delete, quit): help
 3. Run the following command:
   ```bash
   php main.php
+  ```
 4. Follow the instructions displayed in the console.
