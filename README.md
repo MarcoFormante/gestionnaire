@@ -52,11 +52,11 @@ Here is an example of how the program should be used once you have built it:
 
 Enter your command (help, list, detail, create, delete, quit): help
 
--help: displays this help
--list: lists the contacts
--create [name], [email], [phone number]: creates a contact
--delete [id]: deletes a contact
--quit: quits the program
+- help: displays this help
+- list: lists the contacts
+- create [name], [email], [phone number]: creates a contact
+- delete [id]: deletes a contact
+- quit: quits the program
 ---
 
 ### How to test the command-line manager:
